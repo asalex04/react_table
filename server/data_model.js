@@ -1,10 +1,10 @@
 
 const Pool = require('pg').Pool
 const pool = new Pool({
-  user: 'asalex',
+  user: '',
   host: 'localhost',
   database: 'test_db',
-  password: 'a$13801492',
+  password: '',
   port: 5432,
 });
 
@@ -20,12 +20,13 @@ const getData = () => {
 }
 const createData = (body) => {
   return new Promise(function(resolve, reject) {
-    const { name, email } = body
-    pool.query('INSERT INTO test (name, email) VALUES ($1, $2) RETURNING *', [name, email], (error, results) => {
+    const { data, name, quantity, distance } = body
+    pool.query('INSERT INTO test (data, name, quantity, distance) ' +
+      'VALUES ($1, $2, $3, $4) RETURNING *', [data, name, quantity, distance], (error, results) => {
       if (error) {
         reject(error)
       }
-      resolve(`A new merchant has been added added: ${results.rows[0]}`)
+      resolve(`A new data has been added: ${results.rows[0]}`)
     })
   })
 }
@@ -36,7 +37,7 @@ const deleteData = () => {
       if (error) {
         reject(error)
       }
-      resolve(`Merchant deleted with ID: ${id}`)
+      resolve(`Data deleted with ID: ${id}`)
     })
   })
 }

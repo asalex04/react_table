@@ -22,7 +22,7 @@ app.get('/', (req, res) => {
     })
 })
 
-app.post('/merchants', (req, res) => {
+app.post('/test', (req, res) => {
   data_model.createData(req.body)
     .then(response => {
       res.status(200).send(response);
@@ -32,7 +32,7 @@ app.post('/merchants', (req, res) => {
     })
 })
 
-app.delete('/merchants/:id', (req, res) => {
+app.delete('/test/:id', (req, res) => {
   data_model.deleteData(req.params.id)
     .then(response => {
       res.status(200).send(response);
