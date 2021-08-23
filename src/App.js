@@ -1,25 +1,67 @@
-import logo from './logo.svg';
-import './App.css';
+import React, {useState, useEffect} from 'react';
+import axios from 'axios';
+import {connect} from 'react-redux'
 
-function App() {
+import Loader from "./components/Loader/Loader";
+import ListOfConditions from './components/Utils/Conditoins'
+import Table from "./components/Table/Table";
+import Filter from './components/Filter/Filter'
+import {changeVisible} from './store/appReducer'
+import Paginator from "./components/Paginator/Paginator";
+
+const url = 'http://localhost:3001'
+const pageSize = 3
+
+const App = (props) => {
+  const [data, setData] = useState('');
+  const [isLoading, setIsLoading] = useState(false)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [itemsPerPage] = useState(pageSize)
+
+  const handleToggle = () => {
+    props.changeVisible()
+  }
+
+  useEffect(() => {getData()}, []);
+
+  const getData = async () => {
+    setIsLoading(false)
+    const response = await axios.get(url)
+    setData(response.data)
+    setIsLoading(false)
+  }
+
+  const lastItemsIndex = currentPage * itemsPerPage
+  const firstItemsIndex = lastItemsIndex - itemsPerPage
+  const currentItems = data.slice(firstItemsIndex, lastItemsIndex)
+
+  const paginate = pageNumber => setCurrentPage(pageNumber)
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='container'>
+      {isLoading
+        ? <Loader />
+        : (<>
+          <Filter handleToggle={handleToggle}/>
+          {props.isVisible ? <ListOfConditions /> : null}
+          <Table data={currentItems} />
+          </>)
+      }
+      {data &&
+        <Paginator
+          itemsPerPage={itemsPerPage}
+          totalItemsCount={data.length}
+          currentPage={currentPage}
+          paginate={paginate}
+      />}
     </div>
   );
 }
 
-export default App;
+const mapStateToProps = (state) => {
+  return {
+    isVisible: state.app.isVisible
+  }
+}
+
+export default connect(mapStateToProps, {changeVisible})(App)

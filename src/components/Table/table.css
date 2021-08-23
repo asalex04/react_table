@@ -1,0 +1,15 @@
+table {
+    border-collapse: collapse;
+    text-align: center;
+    background-color: lightgray;
+}
+
+td, th {
+    border: 1px solid;
+    margin: 10px;
+}
+
+tbody tr:hover {
+    background-color: khaki;
+}
+
