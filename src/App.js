@@ -12,6 +12,7 @@ import Paginator from "./components/Paginator/Paginator";
 const url = 'http://localhost:3001'
 const pageSize = 3
 
+
 const App = (props) => {
   const [data, setData] = useState('');
   const [isLoading, setIsLoading] = useState(false)
@@ -25,7 +26,7 @@ const App = (props) => {
   useEffect(() => {getData()}, []);
 
   const getData = async () => {
-    setIsLoading(false)
+    setIsLoading(true)
     const response = await axios.get(url)
     setData(response.data)
     setIsLoading(false)
